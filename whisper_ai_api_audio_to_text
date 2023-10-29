@@ -1,0 +1,8 @@
+# pip install openai
+import os
+import openai
+openai.api_key = "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"
+audio_file = open("/content/take_a_nap_audio.m4a", "rb") #reaplace "/content/take_a_nap_audio.m4a" with your audio file
+transcript = openai.Audio.transcribe("whisper-1", audio_file)
+print(transcript)
+# output for this file is: "I want to take a nap on Friday. What time can I do that?"
