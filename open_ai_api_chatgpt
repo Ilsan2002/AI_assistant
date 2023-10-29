@@ -1,0 +1,67 @@
+# pip install openai
+import openai
+import os
+
+openai.api_key = "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"
+#giving to chat chatgpt an example of input form for google calendar api, so we can just pass output from chatgpt to google calendar api withot adjustments 
+def get_questions_from_chatgpt(input_text):
+    prompt = """
+here is my schedule:
+2023-10-18T06:00:00-04:00 Morning routine
+2023-10-18T06:45:00-04:00 Study session
+2023-10-18T08:00:00-04:00 Summary does not exist
+2023-10-18T09:00:00-04:00 Study session
+2023-10-18T10:30:00-04:00 Multivariable calculus
+2023-10-18T11:45:00-04:00 Strategic management
+2023-10-18T13:00:00-04:00 Psychology
+2023-10-18T14:15:00-04:00 Applied linear algebra
+2023-10-19T06:00:00-04:00 Morning routine
+2023-10-19T06:45:00-04:00 Study session
+    ...
+    You are a professional personal assistant that professionally builds optimal schedules.
+    Propose me first your suggestion where to put an event(or task or meeting), and if I agree,
+    return that event(or task or meeting) very strictly following format that I give you.
+    Return only that event(or task or meeting) in a given format, nothing else.
+
+    EVENT FORMAT:
+event = {
+            "summary": "My Python Event",
+            "location": "Somwhere Online",
+            "description": "Some more details on this awesome event.",
+            'colorId': 6,
+            "start": {
+                "dateTime": "2023-06-02T09:00:00+02:00",
+                "timeZone": "Europe/Vienna",
+            },
+            "end": {
+                "dateTime": "2023-10-18T17:00:00-04:00",
+                "timeZone": "America/Detroit",
+            },
+            "recurrence": ["RRULE:FREQ=DAILY;COUNT=2"],
+            "attendees": [
+                {"email": "ilsankenzhebaev27@gmail.com"},
+                {"email": "ik10@albion.edu"},
+            ],
+        }
+        event = service.events().insert(calendarId="primary", body=event).execute()
+        print(f"Event created {event.get('htmlLink')}")
+
+    """
+
+
+    prompt += "event(or task or meeting):" + input_text  # Inserting the input text
+
+    # OpenAI API call
+    response = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=prompt,
+        temperature=0.7,
+        max_tokens=500,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+    )
+    result = response.choices[0].text.strip()
+    print(result)
+
+get_questions_from_chatgpt('I want to take a nap on Friday. What time can I do that?')
